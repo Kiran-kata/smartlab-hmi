@@ -1,8 +1,16 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { Device, Reading, Command } from '../types';
+import { Platform } from 'react-native';
 
-// Android emulator uses 10.0.2.2 to access host machine's localhost
-const API_BASE = __DEV__ ? 'http://10.0.2.2:4000' : 'https://api.smartlab.example.com';
+// Android emulator uses 10.0.2.2, iOS simulator uses localhost
+const getApiBase = () => {
+  if (__DEV__) {
+    return Platform.OS === 'android' ? 'http://10.0.2.2:4000' : 'http://localhost:4000';
+  }
+  return 'https://api.smartlab.example.com';
+};
+
+const API_BASE = getApiBase();
 
 class ApiService {
   private client: AxiosInstance;
