@@ -1,7 +1,7 @@
 # 🧪 SmartLab HMI Controller
 
 <p align="center">
-  <img src="screenshots/app_icon.png" alt="SmartLab HMI" width="120"/>
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/app_icon.png" alt="SmartLab HMI" width="120"/>
 </p>
 
 <p align="center">
@@ -90,23 +90,26 @@ A **lab technician or engineer** wants to monitor and control a small lab setup 
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/01_login_screen.png" width="200" alt="Login Screen"/>
-  <img src="screenshots/02_device_list.png" width="200" alt="Device List"/>
-  <img src="screenshots/03_dashboard.png" width="200" alt="Dashboard"/>
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/01_login_screen.png" width="200" alt="Login Screen"/>
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/02_device_list.png" width="200" alt="Device List"/>
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/03_dashboard.png" width="200" alt="Dashboard"/>
 </p>
 
 <p align="center">
-  <img src="screenshots/04_control_panel.png" width="200" alt="Control Panel"/>
-  <img src="screenshots/05_ble_scan.png" width="200" alt="BLE Scan"/>
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/04_control_panel.png" width="200" alt="Control Panel"/>
+  &nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/05_ble_scan.png" width="200" alt="BLE Scan"/>
 </p>
 
 | Screen | Description |
 |--------|-------------|
-| **Login** | Clean Apple-style authentication screen |
-| **Device List** | View all registered SmartLab devices |
+| **Login** | Clean Apple-style authentication screen with gradient header |
+| **Device List** | View all registered SmartLab devices with status indicators |
 | **Dashboard** | Real-time 3D gauge with temperature/humidity readings |
 | **Control Panel** | LED control, mode switching, threshold adjustment |
-| **BLE Scan** | Discover nearby SmartLab devices via Bluetooth |
+| **BLE Scan** | Discover nearby SmartLab devices via Bluetooth Low Energy |
 
 ---
 
@@ -114,16 +117,11 @@ A **lab technician or engineer** wants to monitor and control a small lab setup 
 
 ### Try it with Expo Go! 📲
 
-Scan the QR code below with the **Expo Go** app to run SmartLab HMI instantly:
+Scan the QR code below with the **Expo Go** app to access the repository:
 
 <p align="center">
-  <img src="screenshots/expo_qr.png" width="200" alt="Expo QR Code"/>
+  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/expo_qr.png" width="200" alt="Expo QR Code"/>
 </p>
-
-**Or open directly:**
-```
-exp://u.expo.dev/smartlab-hmi
-```
 
 > **Note:** Download [Expo Go](https://expo.dev/client) from Play Store/App Store first.
 
@@ -239,43 +237,95 @@ smartlab-hmi/
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack - Detailed Breakdown
 
-### Frontend (Mobile)
-| Technology | Purpose |
-|------------|---------|
-| React Native | Cross-platform mobile framework |
-| TypeScript | Type-safe JavaScript |
-| React Navigation | Screen navigation |
-| Lottie | Animations |
-| Three.js (WebView) | 3D gauge visualization |
-| Expo | Development & deployment |
+### 📱 Frontend (Mobile App)
 
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| Node.js | Runtime environment |
-| Express.js | REST API framework |
-| WebSocket (ws) | Real-time communication |
-| PostgreSQL | Database |
-| TypeScript | Type-safe code |
+| Technology | Version | Purpose | Why We Chose It |
+|------------|---------|---------|-----------------|
+| **React Native** | 0.73.x | Cross-platform mobile framework | Write once, deploy to Android & iOS. Large community, extensive libraries. |
+| **TypeScript** | 5.x | Type-safe JavaScript | Catches errors at compile time, better IDE support, self-documenting code. |
+| **React Navigation** | 6.x | Screen navigation & routing | Industry standard for React Native navigation. Supports stack, tab, drawer navigators. |
+| **Expo** | SDK 54 | Development & deployment platform | Simplified build process, OTA updates, easy testing via Expo Go app. |
+| **Lottie React Native** | 6.x | Vector animations | Smooth, scalable animations from After Effects. Used for loading spinners, success animations. |
+| **Axios** | 1.x | HTTP client | Promise-based, interceptors for auth, automatic JSON parsing. |
+| **React Native WebView** | 13.x | Embedded web content | Used for 3D gauge visualization with Three.js. |
+| **Three.js** | (via WebView) | 3D graphics library | Creates the interactive 3D temperature gauge with smooth animations. |
 
-### Device
-| Technology | Purpose |
-|------------|---------|
-| ESP32 | Microcontroller |
-| BLE GATT | Local wireless control |
-| Wi-Fi | Backend communication |
+#### Mobile Architecture Patterns:
+- **Component-based UI**: Reusable components (GaugeView, StatusBadge, ControlButton)
+- **Service Layer**: Abstracted API, BLE, and WebSocket services
+- **Custom Hooks**: For state management and side effects
+- **Theme System**: Centralized colors, typography, spacing following Apple HIG
+
+### 🖥️ Backend (Server)
+
+| Technology | Version | Purpose | Why We Chose It |
+|------------|---------|---------|-----------------|
+| **Node.js** | 18+ | JavaScript runtime | Non-blocking I/O, perfect for real-time applications. Same language as frontend. |
+| **TypeScript** | 5.x | Type-safe JavaScript | Type safety across the entire stack. Shared types between frontend and backend. |
+| **Express.js** | 4.x | Web framework | Minimal, flexible, huge ecosystem of middleware. Industry standard for Node.js APIs. |
+| **ws** | 8.x | WebSocket library | Lightweight, high-performance WebSocket implementation for real-time data. |
+| **PostgreSQL** | 15+ | Relational database | ACID compliance, JSON support, excellent for time-series sensor data. |
+| **pg** | 8.x | PostgreSQL client | Native PostgreSQL bindings, connection pooling, prepared statements. |
+| **dotenv** | 16.x | Environment variables | Secure configuration management, different settings per environment. |
+| **uuid** | 9.x | Unique ID generation | RFC-compliant UUIDs for device and reading identification. |
+
+#### Backend Architecture Patterns:
+- **Repository Pattern**: Data access abstraction (deviceRepository, readingRepository)
+- **Route Handlers**: RESTful endpoints with proper error handling
+- **WebSocket Manager**: Pub/sub for real-time updates to connected clients
+- **In-Memory Fallback**: Works without database for development/testing
+
+### 📡 Communication Protocols
+
+| Protocol | Use Case | Details |
+|----------|----------|---------|
+| **BLE GATT** | Local device control | Custom service UUID, characteristics for commands/notifications. Range: ~10m. |
+| **HTTP/REST** | Device management | CRUD operations for devices, readings, commands. JSON payloads. |
+| **WebSocket** | Real-time streaming | Bi-directional, persistent connection. Sub-100ms latency for live data. |
+| **JSON** | Data format | Human-readable, easy to parse, supported everywhere. |
+
+### 🔌 Device/Firmware (ESP32)
+
+| Technology | Purpose | Details |
+|------------|---------|---------|
+| **ESP32** | Microcontroller | Dual-core, built-in Wi-Fi & Bluetooth, low power consumption. |
+| **BLE Stack** | Local communication | GATT server with custom service for SmartLab protocol. |
+| **Wi-Fi** | Remote communication | Connects to backend for cloud sync and remote control. |
+| **DHT22/BME280** | Sensors | Temperature & humidity sensing with high accuracy. |
+| **GPIO** | LED/Actuator control | Direct control of status LEDs, relays, and other outputs. |
+
+### 🎨 Design System
+
+| Aspect | Implementation | Details |
+|--------|----------------|---------|
+| **Colors** | Apple System Colors | Primary blue (#007AFF), success green (#34C759), error red (#FF3B30) |
+| **Typography** | SF Pro-inspired | Large titles (34px), headlines (17px), body (15px), captions (12px) |
+| **Spacing** | 8-point grid | Consistent spacing: 4, 8, 12, 16, 20, 24, 32px |
+| **Shadows** | Subtle depth | Small (2px), medium (4px), large (8px) with low opacity |
+| **Border Radius** | Rounded corners | Small (8px), medium (12px), large (16px), full (9999px) |
+
+### 🔧 Development Tools
+
+| Tool | Purpose |
+|------|---------|
+| **VS Code** | IDE with TypeScript, React Native, and ESLint support |
+| **Android Studio** | Android SDK, emulator, and native debugging |
+| **Metro Bundler** | React Native JavaScript bundler |
+| **Gradle** | Android build system |
+| **Git** | Version control |
+| **npm** | Package management |
 
 ---
 
 ## 📦 Installation
 
 ### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Android Studio (for emulator)
-- PostgreSQL (optional, has in-memory fallback)
+- **Node.js** 18+ ([Download](https://nodejs.org/))
+- **npm** or **yarn**
+- **Android Studio** (for emulator) ([Download](https://developer.android.com/studio))
+- **PostgreSQL** (optional, has in-memory fallback)
 
 ### Backend Setup
 
@@ -284,15 +334,21 @@ cd backend
 npm install
 
 # Create .env file (optional)
-echo "DB_HOST=localhost
+cat > .env << EOF
+DB_HOST=localhost
 DB_PORT=5432
 DB_USER=smartlab
 DB_PASS=smartlab
 DB_NAME=smartlab
-PORT=4000" > .env
+PORT=4000
+EOF
 
-# Start server
+# Start server (development)
 npm run dev
+
+# Or build and run (production)
+npm run build
+node dist/server.js
 ```
 
 ### Mobile Setup
@@ -301,11 +357,14 @@ npm run dev
 cd mobile
 npm install
 
-# For Expo (recommended)
+# For Expo (recommended - easiest)
 npx expo start
 
-# For React Native CLI
+# For React Native CLI (requires Android SDK)
 npx react-native run-android
+
+# For production build
+cd android && ./gradlew assembleRelease
 ```
 
 ---
@@ -314,23 +373,52 @@ npx react-native run-android
 
 ### REST Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/devices` | List all devices |
-| POST | `/devices` | Register new device |
-| GET | `/devices/:id` | Get device details |
-| GET | `/devices/:id/readings` | Get sensor readings |
-| POST | `/devices/:id/commands` | Send command to device |
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| GET | `/health` | Health check | - |
+| GET | `/devices` | List all devices | - |
+| POST | `/devices` | Register new device | `{ name, firmwareVersion }` |
+| GET | `/devices/:id` | Get device details | - |
+| GET | `/devices/:id/readings` | Get sensor readings | Query: `limit`, `offset` |
+| GET | `/devices/:id/readings/latest` | Get latest reading | - |
+| POST | `/devices/:id/commands` | Send command | `{ commandType, payload }` |
+| GET | `/devices/:id/commands` | Get command history | Query: `limit`, `offset` |
 
 ### WebSocket Events
 
-| Event | Direction | Description |
-|-------|-----------|-------------|
-| `subscribe` | Client → Server | Subscribe to device updates |
-| `reading` | Server → Client | New sensor reading |
-| `command` | Client → Server | Send command |
-| `status` | Server → Client | Device status change |
+| Event | Direction | Payload | Description |
+|-------|-----------|---------|-------------|
+| `subscribe` | Client → Server | `{ deviceId }` | Subscribe to device updates |
+| `unsubscribe` | Client → Server | `{ deviceId }` | Unsubscribe from device |
+| `reading` | Server → Client | `{ deviceId, temperature, humidity, timestamp }` | New sensor reading |
+| `command` | Client → Server | `{ deviceId, type, payload }` | Send command to device |
+| `status` | Server → Client | `{ deviceId, connected, mode }` | Device status change |
+
+### BLE Commands
+
+| Command | Payload | Description |
+|---------|---------|-------------|
+| `LED_ON` | - | Turn LED on |
+| `LED_OFF` | - | Turn LED off |
+| `MODE_AUTO` | - | Switch to automatic mode |
+| `MODE_MANUAL` | - | Switch to manual mode |
+| `SET_THRESHOLD` | `{ threshold: number }` | Set temperature threshold |
+
+---
+
+## 🧪 Testing
+
+### Run on Emulator (Mock Mode)
+The app automatically detects when running on an emulator and uses mock data:
+- 3 simulated BLE devices
+- Random temperature/humidity readings
+- Simulated command responses
+
+### Run on Physical Device
+1. Enable USB debugging on your Android phone
+2. Connect via USB
+3. Run `npx react-native run-android`
+4. The app will use real BLE to scan for SmartLab devices
 
 ---
 
