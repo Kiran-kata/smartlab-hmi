@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
   Alert,
   ActivityIndicator,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import LottieView from 'lottie-react-native';
 import { RootStackParamList, CommandType, OperationMode } from '../types';
 import { bleService, api } from '../services';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../theme';
@@ -29,7 +29,29 @@ const ControlScreen: React.FC<Props> = ({ navigation, route }) => {
   const [threshold, setThreshold] = useState(35);
   const [sending, setSending] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const lottieRef = useRef<LottieView>(null);
+  const successScale = useRef(new Animated.Value(0)).current;
+  const successOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (showSuccess) {
+      Animated.parallel([
+        Animated.spring(successScale, {
+          toValue: 1,
+          useNativeDriver: true,
+          tension: 50,
+          friction: 5,
+        }),
+        Animated.timing(successOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      successScale.setValue(0);
+      successOpacity.setValue(0);
+    }
+  }, [showSuccess]);
 
   const sendCommand = async (command: CommandType, payload?: Record<string, unknown>) => {
     setSending(command);
@@ -39,7 +61,6 @@ const ControlScreen: React.FC<Props> = ({ navigation, route }) => {
       await api.sendCommand(deviceId, { commandType: command, payload });
 
       setShowSuccess(true);
-      lottieRef.current?.play();
       setTimeout(() => setShowSuccess(false), 1500);
     } catch (error: any) {
       console.error('Command failed:', error);
@@ -297,13 +318,20 @@ const ControlScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Success Animation Overlay */}
       {showSuccess && (
         <View style={styles.successOverlay}>
-          <LottieView
-            ref={lottieRef}
-            source={require('../assets/animations/success.json')}
-            style={styles.successAnimation}
-            autoPlay
-            loop={false}
-          />
+          <Animated.View 
+            style={[
+              styles.successContainer,
+              {
+                opacity: successOpacity,
+                transform: [{ scale: successScale }],
+              }
+            ]}
+          >
+            <View style={styles.successCircle}>
+              <Text style={styles.successCheckmark}>✓</Text>
+            </View>
+            <Text style={styles.successText}>Success!</Text>
+          </Animated.View>
         </View>
       )}
     </View>
@@ -539,6 +567,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  successContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+    alignItems: 'center',
+  },
+  successCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.success,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  successCheckmark: {
+    fontSize: 40,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1C1C1E',
   },
   successAnimation: {
     width: 150,

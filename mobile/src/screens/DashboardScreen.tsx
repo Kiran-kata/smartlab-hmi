@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import { WebView } from 'react-native-webview';
 import { RootStackParamList, Reading, DeviceStatus } from '../types';
 import { wsService, api } from '../services';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../theme';
@@ -19,79 +19,109 @@ type Props = {
   route: RouteProp<RootStackParamList, 'Dashboard'>;
 };
 
-const GAUGE_HTML = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { margin: 0; padding: 0; background: transparent; }
-    canvas { display: block; }
-  </style>
-</head>
-<body>
-  <canvas id="gauge"></canvas>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    let temperature = 25;
-    let needle;
-    
-    function init() {
-      const canvas = document.getElementById('gauge');
-      const width = window.innerWidth;
-      const height = 200;
+// Simple Native Gauge Component
+const GaugeView: React.FC<{ value: number; min: number; max: number }> = ({ value, min, max }) => {
+  const rotation = new Animated.Value(0);
+  const normalizedValue = Math.min(Math.max((value - min) / (max - min), 0), 1);
+  const angle = -90 + normalizedValue * 180; // -90 to 90 degrees
+  
+  useEffect(() => {
+    Animated.spring(rotation, {
+      toValue: angle,
+      useNativeDriver: true,
+      tension: 50,
+      friction: 7,
+    }).start();
+  }, [value]);
+
+  return (
+    <View style={gaugeStyles.container}>
+      {/* Gauge Arc Background */}
+      <View style={gaugeStyles.arcContainer}>
+        <View style={[gaugeStyles.arcSegment, { backgroundColor: Colors.success, transform: [{ rotate: '-60deg' }] }]} />
+        <View style={[gaugeStyles.arcSegment, { backgroundColor: Colors.warning, transform: [{ rotate: '0deg' }] }]} />
+        <View style={[gaugeStyles.arcSegment, { backgroundColor: Colors.error, transform: [{ rotate: '60deg' }] }]} />
+      </View>
       
-      const scene = new THREE.Scene();
-      scene.background = null;
+      {/* Needle */}
+      <Animated.View 
+        style={[
+          gaugeStyles.needle,
+          { transform: [{ rotate: `${angle}deg` }] }
+        ]}
+      >
+        <View style={gaugeStyles.needlePointer} />
+      </Animated.View>
       
-      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.z = 5;
+      {/* Center Circle */}
+      <View style={gaugeStyles.centerCircle} />
       
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setSize(width, height);
-      renderer.setClearColor(0x000000, 0);
-      
-      // Create gauge arc - Apple blue
-      const arcGeometry = new THREE.TorusGeometry(1.5, 0.1, 16, 100, Math.PI);
-      const arcMaterial = new THREE.MeshBasicMaterial({ color: 0x007AFF });
-      const arc = new THREE.Mesh(arcGeometry, arcMaterial);
-      arc.rotation.z = Math.PI / 2;
-      scene.add(arc);
-      
-      // Create needle
-      const needleGeometry = new THREE.ConeGeometry(0.05, 1.3, 32);
-      const needleMaterial = new THREE.MeshBasicMaterial({ color: 0xFF3B30 });
-      needle = new THREE.Mesh(needleGeometry, needleMaterial);
-      needle.position.y = 0.65;
-      
-      const pivotGeometry = new THREE.SphereGeometry(0.1, 32, 32);
-      const pivotMaterial = new THREE.MeshBasicMaterial({ color: 0x1C1C1E });
-      const pivot = new THREE.Mesh(pivotGeometry, pivotMaterial);
-      
-      const needleGroup = new THREE.Group();
-      needleGroup.add(needle);
-      needleGroup.add(pivot);
-      scene.add(needleGroup);
-      
-      function animate() {
-        requestAnimationFrame(animate);
-        const targetAngle = ((temperature - 25) / 50) * Math.PI;
-        needleGroup.rotation.z += (targetAngle - needleGroup.rotation.z) * 0.1;
-        renderer.render(scene, camera);
-      }
-      
-      animate();
-    }
-    
-    window.updateTemperature = function(temp) {
-      temperature = temp;
-    };
-    
-    init();
-  </script>
-</body>
-</html>
-`;
+      {/* Min/Max Labels */}
+      <Text style={[gaugeStyles.label, gaugeStyles.minLabel]}>{min}°</Text>
+      <Text style={[gaugeStyles.label, gaugeStyles.maxLabel]}>{max}°</Text>
+    </View>
+  );
+};
+
+const gaugeStyles = StyleSheet.create({
+  container: {
+    width: 200,
+    height: 120,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  arcContainer: {
+    position: 'absolute',
+    top: 10,
+    width: 180,
+    height: 90,
+    overflow: 'hidden',
+  },
+  arcSegment: {
+    position: 'absolute',
+    bottom: 0,
+    left: 60,
+    width: 60,
+    height: 90,
+    borderTopLeftRadius: 90,
+    borderTopRightRadius: 90,
+    transformOrigin: 'bottom center',
+  },
+  needle: {
+    position: 'absolute',
+    bottom: 10,
+    width: 4,
+    height: 70,
+    alignItems: 'center',
+    transformOrigin: 'bottom center',
+  },
+  needlePointer: {
+    width: 4,
+    height: 60,
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+  },
+  centerCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: Colors.label,
+    position: 'absolute',
+    bottom: 0,
+  },
+  label: {
+    position: 'absolute',
+    bottom: 0,
+    fontSize: 12,
+    color: Colors.secondaryLabel,
+  },
+  minLabel: {
+    left: 10,
+  },
+  maxLabel: {
+    right: 10,
+  },
+});
 
 const DashboardScreen: React.FC<Props> = ({ navigation, route }) => {
   const { deviceId } = route.params;
@@ -103,16 +133,12 @@ const DashboardScreen: React.FC<Props> = ({ navigation, route }) => {
     isConnected: false,
   });
   const [wsConnected, setWsConnected] = useState(false);
-  const webViewRef = useRef<WebView>(null);
 
   useEffect(() => {
     wsService.connect(deviceId);
 
     const unsubReading = wsService.onReading((newReading) => {
       setReading(newReading);
-      webViewRef.current?.injectJavaScript(
-        `window.updateTemperature(${newReading.temperature}); true;`
-      );
     });
 
     const unsubEvent = wsService.onEvent((event) => {
@@ -177,12 +203,10 @@ const DashboardScreen: React.FC<Props> = ({ navigation, route }) => {
       <View style={styles.gaugeCard}>
         <Text style={styles.sectionLabel}>TEMPERATURE</Text>
         <View style={styles.gaugeWrapper}>
-          <WebView
-            ref={webViewRef}
-            source={{ html: GAUGE_HTML }}
-            style={styles.gauge}
-            scrollEnabled={false}
-            javaScriptEnabled={true}
+          <GaugeView 
+            value={reading?.temperature ?? 25} 
+            min={0} 
+            max={50} 
           />
         </View>
         <Text style={styles.gaugeValue}>

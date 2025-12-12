@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import LottieView from 'lottie-react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, Text } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -10,17 +9,43 @@ interface Props {
 /**
  * Command Success Animation
  * 
- * Displays a Lottie animation overlay when a command is successfully sent
- * to the SmartLab device. Uses the checkmark success animation.
+ * Displays an animated checkmark overlay when a command is successfully sent
+ * to the SmartLab device. Uses native React Native Animated API.
  */
 const CommandSuccessAnimation: React.FC<Props> = ({ visible, onAnimationComplete }) => {
-  const lottieRef = useRef<LottieView>(null);
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
-      lottieRef.current?.play();
+      Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+          tension: 50,
+          friction: 5,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Hold for a moment then fade out
+        setTimeout(() => {
+          Animated.timing(opacityAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            scaleAnim.setValue(0);
+            onAnimationComplete?.();
+          });
+        }, 800);
+      });
     } else {
-      lottieRef.current?.reset();
+      scaleAnim.setValue(0);
+      opacityAnim.setValue(0);
     }
   }, [visible]);
 
@@ -28,18 +53,20 @@ const CommandSuccessAnimation: React.FC<Props> = ({ visible, onAnimationComplete
 
   return (
     <View style={styles.overlay}>
-      <View style={styles.animationContainer}>
-        <LottieView
-          ref={lottieRef}
-          source={require('../assets/animations/success.json')}
-          style={styles.animation}
-          autoPlay
-          loop={false}
-          onAnimationFinish={() => {
-            onAnimationComplete?.();
-          }}
-        />
-      </View>
+      <Animated.View 
+        style={[
+          styles.animationContainer,
+          {
+            opacity: opacityAnim,
+            transform: [{ scale: scaleAnim }],
+          }
+        ]}
+      >
+        <View style={styles.checkCircle}>
+          <Text style={styles.checkmark}>✓</Text>
+        </View>
+        <Text style={styles.successText}>Success!</Text>
+      </Animated.View>
     </View>
   );
 };
@@ -59,16 +86,32 @@ const styles = StyleSheet.create({
   animationContainer: {
     backgroundColor: '#fff',
     borderRadius: 20,
-    padding: 20,
+    padding: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 10,
+    alignItems: 'center',
   },
-  animation: {
-    width: 120,
-    height: 120,
+  checkCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#34C759',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  checkmark: {
+    fontSize: 40,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1C1C1E',
   },
 });
 
