@@ -1,0 +1,40 @@
+{
+  "name": "SmartLabMobile",
+  "displayName": "SmartLab HMI",
+  "expo": {
+    "name": "SmartLab HMI Controller",
+    "slug": "smartlab-hmi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#007AFF"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartlab.hmi"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#007AFF"
+      },
+      "package": "com.smartlabmobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "smartlab-hmi"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const path = require('path');
+
+// Root of the monorepo
+const projectRoot = __dirname;
+const monorepoRoot = path.resolve(projectRoot, '..');
+
+/**
+ * Metro configuration
+ * https://facebook.github.io/metro/docs/configuration
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
+  watchFolders: [monorepoRoot],
+  resolver: {
+    nodeModulesPaths: [
+      path.resolve(projectRoot, 'node_modules'),
+      path.resolve(monorepoRoot, 'node_modules'),
+    ],
+  },
+};
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);

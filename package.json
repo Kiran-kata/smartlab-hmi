@@ -1,0 +1,42 @@
+{
+  "name": "smartlab-hmi",
+  "version": "1.0.0",
+  "description": "SmartLab HMI Controller - React Native Android app with BLE, WebSocket, and PostgreSQL backend",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "mobile"
+  ],
+  "scripts": {
+    "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1",
+    "setup:unix": "bash ./scripts/setup.sh",
+    "backend:dev": "cd backend && npm run dev",
+    "backend:build": "cd backend && npm run build",
+    "backend:migrate": "cd backend && npm run migrate",
+    "backend:simulator": "cd backend && npm run simulator",
+    "mobile:android": "cd mobile && npx react-native run-android",
+    "mobile:start": "cd mobile && npx react-native start",
+    "lint": "npm run lint --workspaces",
+    "clean": "rimraf backend/dist mobile/android/app/build node_modules/.cache"
+  },
+  "keywords": [
+    "react-native",
+    "android",
+    "ble",
+    "bluetooth",
+    "websocket",
+    "postgresql",
+    "hmi",
+    "iot",
+    "laboratory"
+  ],
+  "author": "SmartLab Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5"
+  }
+}
