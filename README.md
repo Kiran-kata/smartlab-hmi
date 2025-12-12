@@ -5,85 +5,101 @@
 </p>
 
 <p align="center">
-  <strong>A modern mobile Human-Machine Interface for smart lab equipment</strong>
+  <strong>A modern mobile Human-Machine Interface for smart laboratory equipment monitoring and control</strong>
 </p>
 
 <p align="center">
-  <a href="#-live-demo">Live Demo</a> •
+  <a href="#-overview">Overview</a> •
   <a href="#-features">Features</a> •
   <a href="#-screenshots">Screenshots</a> •
   <a href="#-installation">Installation</a> •
-  <a href="#-architecture">Architecture</a>
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-api-reference">API Reference</a>
 </p>
 
 ---
 
-## 📱 What is SmartLab HMI Controller?
+## 📖 Overview
 
-**SmartLab HMI Controller** is a mobile app that acts as the control panel for a smart lab device.
+### What is SmartLab HMI Controller?
 
-> *"The app you use to monitor lab equipment in real time and control it safely from your phone."*
+**SmartLab HMI Controller** is a comprehensive mobile application that serves as the primary control interface for smart laboratory equipment. Built with **React Native** and following **Apple Human Interface Guidelines**, it provides an intuitive, touch-based interface for monitoring sensor data, controlling device states, and managing laboratory equipment remotely.
 
-It replaces or extends the physical buttons, LEDs, and small displays on lab equipment with a richer, touch-based interface following **Apple Human Interface Guidelines** for a clean, intuitive user experience.
+The application replaces or extends traditional physical controls (buttons, LEDs, small displays) with a modern, feature-rich graphical interface that lab technicians and engineers can use from their Android devices.
+
+### Why This Project?
+
+In modern laboratories, equipment often needs to be:
+- **Monitored remotely** - Check sensor readings without being physically present
+- **Controlled safely** - Adjust settings through a validated interface
+- **Logged comprehensively** - Track all readings and commands for compliance
+- **Alerted proactively** - Receive visual warnings when thresholds are exceeded
+
+SmartLab HMI Controller addresses all these needs with a single, well-designed mobile application.
 
 ---
 
 ## 🔬 What Does It Control?
 
-The app connects to a **SmartLab device** (environmental chamber, sensor hub, or lab controller box) that has:
+The app interfaces with **SmartLab devices** - environmental chambers, sensor hubs, or lab controller boxes that include:
 
-### 🌡️ Sensors
-- **Temperature** monitoring (°C)
-- **Humidity** monitoring (%)
-- Expandable to pressure, gas levels, etc.
+### 🌡️ Environmental Sensors
+| Sensor | Range | Accuracy | Update Rate |
+|--------|-------|----------|-------------|
+| **Temperature** | -40°C to +85°C | ±0.5°C | 1 second |
+| **Humidity** | 0% to 100% RH | ±2% RH | 1 second |
 
-### 💡 LED Status & Alerts
-- Turn LED **on/off** from the app
-- Color/blink patterns based on status:
-  - 🟢 **Normal** - Everything OK
-  - 🟡 **Warning** - Approaching threshold
-  - 🔴 **Critical** - Threshold exceeded
+*Expandable to pressure, gas levels, light intensity, and more.*
+
+### 💡 LED Status Indicators
+Visual feedback through programmable LED states:
+- 🟢 **Green (Normal)** - All readings within acceptable range
+- 🟡 **Yellow (Warning)** - Approaching threshold limits
+- 🔴 **Red (Critical)** - Threshold exceeded, immediate attention required
 
 ### ⚙️ Operating Modes
-- **Auto Mode** - Device decides based on sensor readings
-- **Manual Mode** - User directly controls outputs
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **AUTO** | Device autonomously responds to sensor readings | Normal operation, hands-off monitoring |
+| **MANUAL** | User has direct control over all outputs | Testing, calibration, override situations |
 
 ### 🎚️ Safety Thresholds
-- Set temperature/humidity thresholds from the app
-- When readings cross thresholds:
-  - App shows warnings (animations, color changes)
-  - Device triggers LEDs or alarms
+- Configure temperature and humidity alert thresholds
+- Real-time visual warnings when limits are approached or exceeded
+- Automatic LED/alarm triggering on threshold breach
+- Threshold changes logged for audit compliance
 
-### 📊 Data Streaming
-- Start a "session" for constant data streaming
-- Stop streaming to save power/bandwidth
-- All readings stored for later analysis
-
-### 🔮 Future Expansions
-- Fan on/off control
-- Pump on/off control
-- "Experiment profiles" (e.g., maintain 25-27°C for 30 minutes)
+### 📊 Data Streaming & Logging
+- Real-time WebSocket streaming for live dashboard updates
+- All sensor readings persisted to PostgreSQL database
+- Command history tracked with timestamps and user context
+- Export capabilities for analysis and compliance reporting
 
 ---
 
-## 🎯 Real-Life Use Cases
+## 🎯 Real-World Use Cases
 
-A **lab technician or engineer** wants to monitor and control a small lab setup (sensor box in a growth chamber or test rig) without being next to it:
+### Laboratory Monitoring Scenario
 
-1. **Open the SmartLab HMI Controller app** on Android
-2. **Connect to device** via BLE (nearby) or Wi-Fi/WebSockets (remote)
-3. **See live readings** - temperature, humidity in real-time
-4. **Adjust modes and thresholds** - switch between Auto/Manual
-5. **Get visual warnings** - if something goes out of range
-6. **Review history** - all data saved to database
+A **lab technician** needs to monitor an incubation chamber remotely:
 
-### Primary Uses:
-| Use Case | Description |
-|----------|-------------|
-| **Monitoring** | Real-time view of lab device conditions from your phone |
-| **Control** | Safely change device behavior (LEDs, modes, thresholds) |
-| **HMI/UX** | Modern graphical interface replacing physical controls |
-| **Data Logging** | All readings and commands saved for analysis |
+1. **Opens SmartLab HMI Controller** on their Android device
+2. **Scans for nearby devices** via Bluetooth Low Energy (BLE)
+3. **Connects to the target chamber** - sees live temperature/humidity
+4. **Sets safety thresholds** - e.g., alert if temp > 37.5°C
+5. **Monitors from their desk** - real-time updates via WebSocket
+6. **Receives visual alerts** - if readings go out of range
+7. **Reviews history** - all data saved for lab notebook documentation
+
+### Primary Application Areas
+
+| Application | Description |
+|-------------|-------------|
+| **Environmental Chambers** | Monitor and control temperature/humidity in growth chambers, incubators |
+| **Clean Rooms** | Track environmental conditions for manufacturing compliance |
+| **Cold Storage** | Monitor refrigerators, freezers, cryogenic storage |
+| **Process Monitoring** | Real-time oversight of chemical reactions, fermentation |
+| **Quality Control** | Environmental logging for ISO/GMP compliance |
 
 ---
 
@@ -103,101 +119,97 @@ A **lab technician or engineer** wants to monitor and control a small lab setup 
   <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/05_ble_scan.png" width="200" alt="BLE Scan"/>
 </p>
 
-| Screen | Description |
-|--------|-------------|
-| **Login** | Clean Apple-style authentication screen with gradient header |
-| **Device List** | View all registered SmartLab devices with status indicators |
-| **Dashboard** | Real-time 3D gauge with temperature/humidity readings |
-| **Control Panel** | LED control, mode switching, threshold adjustment |
-| **BLE Scan** | Discover nearby SmartLab devices via Bluetooth Low Energy |
+### Screen Descriptions
 
----
-
-## 🚀 Live Demo
-
-### Try it with Expo Go! 📲
-
-Scan the QR code below with the **Expo Go** app to access the repository:
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Kiran-kata/smartlab-hmi/main/screenshots/expo_qr.png" width="200" alt="Expo QR Code"/>
-</p>
-
-> **Note:** Download [Expo Go](https://expo.dev/client) from Play Store/App Store first.
-
-### Run Locally
-
-```bash
-# Clone the repository
-git clone https://github.com/Kiran-kata/smartlab-hmi.git
-cd smartlab-hmi
-
-# Start the backend
-cd backend
-npm install
-npm run dev
-
-# Start the mobile app (in another terminal)
-cd mobile
-npm install
-npx expo start
-```
+| Screen | Purpose | Key Features |
+|--------|---------|--------------|
+| **Login** | User authentication | Clean Apple-style design, gradient header, secure input |
+| **Device List** | Device management | All registered devices, connection status, quick access |
+| **Dashboard** | Real-time monitoring | Animated gauge visualization, live temp/humidity readings |
+| **Control Panel** | Device control | LED toggle, mode switching, threshold adjustment, command history |
+| **BLE Scan** | Device discovery | Bluetooth scanning, signal strength indicators, device pairing |
 
 ---
 
 ## ✨ Features
 
-### 📱 Mobile App (React Native + TypeScript)
-- **Apple HIG Design** - Clean, modern iOS-style interface
-- **Real-time Dashboard** - 3D animated gauge visualization
-- **BLE Connectivity** - Connect to nearby devices via Bluetooth
-- **WebSocket Streaming** - Live sensor data updates
-- **Offline Mock Mode** - Works in emulator with simulated data
-- **Lottie Animations** - Smooth loading and success animations
+### 📱 Mobile Application
 
-### 🖥️ Backend (Node.js + TypeScript)
-- **REST API** - Device registration, readings, commands
-- **WebSocket Server** - Real-time pub/sub for live data
-- **PostgreSQL** - Persistent storage (with in-memory fallback)
-- **Health Monitoring** - `/health` endpoint for status checks
+| Feature | Description |
+|---------|-------------|
+| **Apple HIG Design** | Clean, modern iOS-style interface with consistent typography and spacing |
+| **Real-time Dashboard** | Animated gauge visualization with live sensor data updates |
+| **BLE Connectivity** | Bluetooth Low Energy for direct device communication |
+| **WebSocket Streaming** | Sub-100ms latency for live data updates |
+| **Native Animations** | Smooth React Native Animated API for fluid UI transitions |
+| **Offline Capability** | Mock mode for development and testing without physical hardware |
+| **Type Safety** | Full TypeScript implementation for reliability |
 
-### 🔌 Device Protocol
-- **BLE GATT** - Custom service/characteristics for commands
-- **JSON Commands** - LED_ON, LED_OFF, MODE_AUTO, MODE_MANUAL, SET_THRESHOLD
-- **Sensor Notifications** - Temperature, humidity, status updates
+### 🖥️ Backend Server
+
+| Feature | Description |
+|---------|-------------|
+| **RESTful API** | Complete CRUD operations for devices, readings, commands |
+| **WebSocket Server** | Real-time pub/sub system for connected clients |
+| **PostgreSQL Storage** | Persistent, reliable data storage with proper indexing |
+| **In-Memory Fallback** | Works without database for quick development setup |
+| **Health Monitoring** | `/health` endpoint for infrastructure health checks |
+| **Type Safety** | Full TypeScript implementation |
+
+### 🔌 Device Communication
+
+| Protocol | Purpose | Details |
+|----------|---------|---------|
+| **BLE GATT** | Local control | Custom service UUID with read/write/notify characteristics |
+| **WebSocket** | Real-time sync | Bi-directional streaming for live updates |
+| **REST API** | Management | Device registration, history retrieval, configuration |
 
 ---
 
 ## 🏗️ Architecture
 
+### System Overview
+
 ```
-┌─────────────────┐     BLE      ┌─────────────────┐
-│   SmartLab      │◄────────────►│   Mobile App    │
-│   Device        │              │   (React Native)│
-│   (ESP32)       │              │                 │
-└────────┬────────┘              └────────┬────────┘
-         │                                │
-         │ Wi-Fi                          │ HTTP/WS
-         │                                │
-         ▼                                ▼
-┌─────────────────────────────────────────────────┐
-│              Backend Server                      │
-│              (Node.js + Express)                 │
-│                                                  │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐  │
-│  │ REST API │  │WebSocket │  │  PostgreSQL  │  │
-│  │ /devices │  │  Pub/Sub │  │   Database   │  │
-│  │ /readings│  │          │  │              │  │
-│  └──────────┘  └──────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                        MOBILE APP                                │
+│                    (React Native + TypeScript)                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   Screens    │  │   Services   │  │    Theme     │          │
+│  │  - Dashboard │  │  - API       │  │  - Colors    │          │
+│  │  - Control   │  │  - BLE       │  │  - Typography│          │
+│  │  - BLE Scan  │  │  - WebSocket │  │  - Spacing   │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+└────────────┬──────────────────────────────┬─────────────────────┘
+             │                              │
+             │ BLE (Local)                  │ HTTP/WebSocket (Remote)
+             │                              │
+             ▼                              ▼
+┌─────────────────────┐          ┌─────────────────────────────────┐
+│    SMARTLAB DEVICE  │          │         BACKEND SERVER          │
+│       (ESP32)       │          │      (Node.js + Express)        │
+│  ┌───────────────┐  │          │  ┌───────────┐ ┌─────────────┐ │
+│  │ BLE GATT      │  │  Wi-Fi   │  │ REST API  │ │  WebSocket  │ │
+│  │ Server        │◄─┼──────────┼─►│ /devices  │ │   Pub/Sub   │ │
+│  └───────────────┘  │          │  │ /readings │ │             │ │
+│  ┌───────────────┐  │          │  └───────────┘ └─────────────┘ │
+│  │ DHT22/BME280  │  │          │         │                       │
+│  │ Sensors       │  │          │         ▼                       │
+│  └───────────────┘  │          │  ┌─────────────────────┐       │
+│  ┌───────────────┐  │          │  │    PostgreSQL       │       │
+│  │ GPIO (LEDs)   │  │          │  │    Database         │       │
+│  └───────────────┘  │          │  └─────────────────────┘       │
+└─────────────────────┘          └─────────────────────────────────┘
 ```
 
 ### Data Flow
 
-1. **Device → Backend**: Sensor readings via Wi-Fi (MQTT/HTTP)
-2. **Backend → App**: Real-time updates via WebSocket
-3. **App → Device**: BLE commands for local control
-4. **App → Backend**: REST API for device management
+| Flow | Path | Description |
+|------|------|-------------|
+| **Sensor → Backend** | Device → Wi-Fi → Server → DB | Sensor readings stored for history |
+| **Backend → App** | Server → WebSocket → Mobile | Real-time updates pushed to app |
+| **App → Device (Local)** | Mobile → BLE → Device | Direct commands when nearby |
+| **App → Device (Remote)** | Mobile → API → Server → Device | Remote commands via backend |
 
 ---
 
@@ -205,135 +217,144 @@ npx expo start
 
 ```
 smartlab-hmi/
-├── 📁 backend/              # Node.js backend server
+│
+├── 📁 backend/                      # Node.js backend server
 │   ├── src/
-│   │   ├── routes/         # REST API endpoints
-│   │   ├── repositories/   # Data access layer
-│   │   ├── websocket/      # WebSocket handlers
-│   │   └── server.ts       # Entry point
-│   └── package.json
+│   │   ├── routes/                 # REST API endpoint handlers
+│   │   │   ├── devices.ts         # Device CRUD operations
+│   │   │   ├── readings.ts        # Sensor data endpoints
+│   │   │   └── commands.ts        # Command dispatch endpoints
+│   │   ├── repositories/          # Data access layer
+│   │   │   ├── deviceRepository.ts
+│   │   │   └── readingRepository.ts
+│   │   ├── websocket/             # Real-time communication
+│   │   │   └── wsManager.ts       # WebSocket connection manager
+│   │   ├── types/                 # TypeScript type definitions
+│   │   └── server.ts              # Application entry point
+│   ├── dist/                      # Compiled JavaScript output
+│   ├── package.json
+│   └── tsconfig.json
 │
-├── 📁 mobile/               # React Native app
+├── 📁 mobile/                       # React Native mobile application
 │   ├── src/
-│   │   ├── screens/        # UI screens
-│   │   ├── components/     # Reusable components
-│   │   ├── services/       # API, BLE, WebSocket
-│   │   ├── theme/          # Apple HIG design system
-│   │   └── types/          # TypeScript definitions
-│   ├── android/            # Android native code
-│   │   └── app/src/main/java/.../SmartBle.kt
-│   └── package.json
+│   │   ├── screens/               # Application screens
+│   │   │   ├── LoginScreen.tsx   # User authentication
+│   │   │   ├── DeviceListScreen.tsx
+│   │   │   ├── DashboardScreen.tsx   # Real-time monitoring
+│   │   │   ├── ControlScreen.tsx     # Device control
+│   │   │   └── BLEConnectScreen.tsx  # Bluetooth scanning
+│   │   ├── components/            # Reusable UI components
+│   │   │   └── CommandSuccessAnimation.tsx
+│   │   ├── services/              # External service integrations
+│   │   │   ├── api.ts            # REST API client
+│   │   │   ├── bleService.ts     # Bluetooth Low Energy
+│   │   │   └── wsService.ts      # WebSocket client
+│   │   ├── theme/                 # Design system
+│   │   │   ├── colors.ts         # Color palette
+│   │   │   ├── typography.ts     # Font styles
+│   │   │   └── spacing.ts        # Layout constants
+│   │   └── types/                 # TypeScript definitions
+│   ├── android/                   # Android native code
+│   │   └── app/src/main/java/
+│   │       └── com/smartlabmobile/
+│   │           └── SmartBle.kt   # Native BLE bridge
+│   ├── package.json
+│   ├── metro.config.js           # Metro bundler configuration
+│   ├── app.json                  # React Native app configuration
+│   └── tsconfig.json
 │
-├── 📁 device/               # Firmware documentation
-│   └── protocol.md         # BLE/MQTT protocol spec
+├── 📁 device/                       # Firmware documentation
+│   └── protocol.md                # BLE/MQTT protocol specification
 │
-├── 📁 screenshots/          # App screenshots
+├── 📁 screenshots/                  # Application screenshots
+│   ├── 01_login_screen.png
+│   ├── 02_device_list.png
+│   ├── 03_dashboard.png
+│   ├── 04_control_panel.png
+│   └── 05_ble_scan.png
 │
-└── 📁 docs/                 # Documentation
-    ├── requirements.md
-    ├── architecture.md
-    └── api.md
+├── 📁 docs/                         # Additional documentation
+│   ├── requirements.md
+│   ├── architecture.md
+│   └── api.md
+│
+└── README.md                        # This file
 ```
 
 ---
 
-## 🛠️ Tech Stack - Detailed Breakdown
+## 🛠️ Technology Stack
 
-### 📱 Frontend (Mobile App)
+### Mobile Application
 
-| Technology | Version | Purpose | Why We Chose It |
-|------------|---------|---------|-----------------|
-| **React Native** | 0.73.x | Cross-platform mobile framework | Write once, deploy to Android & iOS. Large community, extensive libraries. |
-| **TypeScript** | 5.x | Type-safe JavaScript | Catches errors at compile time, better IDE support, self-documenting code. |
-| **React Navigation** | 6.x | Screen navigation & routing | Industry standard for React Native navigation. Supports stack, tab, drawer navigators. |
-| **Expo** | SDK 54 | Development & deployment platform | Simplified build process, OTA updates, easy testing via Expo Go app. |
-| **Lottie React Native** | 6.x | Vector animations | Smooth, scalable animations from After Effects. Used for loading spinners, success animations. |
-| **Axios** | 1.x | HTTP client | Promise-based, interceptors for auth, automatic JSON parsing. |
-| **React Native WebView** | 13.x | Embedded web content | Used for 3D gauge visualization with Three.js. |
-| **Three.js** | (via WebView) | 3D graphics library | Creates the interactive 3D temperature gauge with smooth animations. |
-
-#### Mobile Architecture Patterns:
-- **Component-based UI**: Reusable components (GaugeView, StatusBadge, ControlButton)
-- **Service Layer**: Abstracted API, BLE, and WebSocket services
-- **Custom Hooks**: For state management and side effects
-- **Theme System**: Centralized colors, typography, spacing following Apple HIG
-
-### 🖥️ Backend (Server)
-
-| Technology | Version | Purpose | Why We Chose It |
-|------------|---------|---------|-----------------|
-| **Node.js** | 18+ | JavaScript runtime | Non-blocking I/O, perfect for real-time applications. Same language as frontend. |
-| **TypeScript** | 5.x | Type-safe JavaScript | Type safety across the entire stack. Shared types between frontend and backend. |
-| **Express.js** | 4.x | Web framework | Minimal, flexible, huge ecosystem of middleware. Industry standard for Node.js APIs. |
-| **ws** | 8.x | WebSocket library | Lightweight, high-performance WebSocket implementation for real-time data. |
-| **PostgreSQL** | 15+ | Relational database | ACID compliance, JSON support, excellent for time-series sensor data. |
-| **pg** | 8.x | PostgreSQL client | Native PostgreSQL bindings, connection pooling, prepared statements. |
-| **dotenv** | 16.x | Environment variables | Secure configuration management, different settings per environment. |
-| **uuid** | 9.x | Unique ID generation | RFC-compliant UUIDs for device and reading identification. |
-
-#### Backend Architecture Patterns:
-- **Repository Pattern**: Data access abstraction (deviceRepository, readingRepository)
-- **Route Handlers**: RESTful endpoints with proper error handling
-- **WebSocket Manager**: Pub/sub for real-time updates to connected clients
-- **In-Memory Fallback**: Works without database for development/testing
-
-### 📡 Communication Protocols
-
-| Protocol | Use Case | Details |
-|----------|----------|---------|
-| **BLE GATT** | Local device control | Custom service UUID, characteristics for commands/notifications. Range: ~10m. |
-| **HTTP/REST** | Device management | CRUD operations for devices, readings, commands. JSON payloads. |
-| **WebSocket** | Real-time streaming | Bi-directional, persistent connection. Sub-100ms latency for live data. |
-| **JSON** | Data format | Human-readable, easy to parse, supported everywhere. |
-
-### 🔌 Device/Firmware (ESP32)
-
-| Technology | Purpose | Details |
+| Technology | Version | Purpose |
 |------------|---------|---------|
-| **ESP32** | Microcontroller | Dual-core, built-in Wi-Fi & Bluetooth, low power consumption. |
-| **BLE Stack** | Local communication | GATT server with custom service for SmartLab protocol. |
-| **Wi-Fi** | Remote communication | Connects to backend for cloud sync and remote control. |
-| **DHT22/BME280** | Sensors | Temperature & humidity sensing with high accuracy. |
-| **GPIO** | LED/Actuator control | Direct control of status LEDs, relays, and other outputs. |
+| **React Native** | 0.73.6 | Cross-platform mobile framework |
+| **TypeScript** | 5.x | Type-safe JavaScript superset |
+| **React Navigation** | 6.x | Screen navigation and routing |
+| **Axios** | 1.x | HTTP client for REST API |
+| **React Native Animated** | (built-in) | Smooth UI animations |
 
-### 🎨 Design System
+### Backend Server
 
-| Aspect | Implementation | Details |
-|--------|----------------|---------|
-| **Colors** | Apple System Colors | Primary blue (#007AFF), success green (#34C759), error red (#FF3B30) |
-| **Typography** | SF Pro-inspired | Large titles (34px), headlines (17px), body (15px), captions (12px) |
-| **Spacing** | 8-point grid | Consistent spacing: 4, 8, 12, 16, 20, 24, 32px |
-| **Shadows** | Subtle depth | Small (2px), medium (4px), large (8px) with low opacity |
-| **Border Radius** | Rounded corners | Small (8px), medium (12px), large (16px), full (9999px) |
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Node.js** | 18+ | JavaScript runtime |
+| **TypeScript** | 5.x | Type-safe development |
+| **Express.js** | 4.x | Web framework |
+| **ws** | 8.x | WebSocket server |
+| **PostgreSQL** | 15+ | Relational database |
+| **pg** | 8.x | PostgreSQL client |
 
-### 🔧 Development Tools
+### Device Firmware
 
-| Tool | Purpose |
-|------|---------|
-| **VS Code** | IDE with TypeScript, React Native, and ESLint support |
-| **Android Studio** | Android SDK, emulator, and native debugging |
-| **Metro Bundler** | React Native JavaScript bundler |
-| **Gradle** | Android build system |
-| **Git** | Version control |
-| **npm** | Package management |
+| Technology | Purpose |
+|------------|---------|
+| **ESP32** | Microcontroller with Wi-Fi/BLE |
+| **DHT22/BME280** | Environmental sensors |
+| **BLE GATT** | Local wireless communication |
+
+### Design System
+
+| Aspect | Implementation |
+|--------|----------------|
+| **Colors** | Apple System Colors (Primary #007AFF, Success #34C759, Error #FF3B30) |
+| **Typography** | SF Pro-inspired sizing (Title 34px, Headline 17px, Body 15px) |
+| **Spacing** | 8-point grid system (4, 8, 12, 16, 20, 24, 32px) |
+| **Shadows** | Subtle depth with low opacity (2px, 4px, 8px offsets) |
+| **Border Radius** | Consistent rounding (8px small, 12px medium, 16px large) |
 
 ---
 
 ## 📦 Installation
 
 ### Prerequisites
-- **Node.js** 18+ ([Download](https://nodejs.org/))
-- **npm** or **yarn**
-- **Android Studio** (for emulator) ([Download](https://developer.android.com/studio))
-- **PostgreSQL** (optional, has in-memory fallback)
 
-### Backend Setup
+| Requirement | Version | Download |
+|-------------|---------|----------|
+| **Node.js** | 18+ | [nodejs.org](https://nodejs.org/) |
+| **npm** | 9+ | Included with Node.js |
+| **Android Studio** | Latest | [developer.android.com](https://developer.android.com/studio) |
+| **JDK** | 17 | Included with Android Studio |
+| **PostgreSQL** | 15+ (optional) | [postgresql.org](https://www.postgresql.org/download/) |
+
+### Step 1: Clone Repository
 
 ```bash
+git clone https://github.com/Kiran-kata/smartlab-hmi.git
+cd smartlab-hmi
+```
+
+### Step 2: Backend Setup
+
+```bash
+# Navigate to backend directory
 cd backend
+
+# Install dependencies
 npm install
 
-# Create .env file (optional)
+# Create environment configuration (optional)
 cat > .env << EOF
 DB_HOST=localhost
 DB_PORT=5432
@@ -343,28 +364,41 @@ DB_NAME=smartlab
 PORT=4000
 EOF
 
-# Start server (development)
+# Build TypeScript
+npm run build
+
+# Start server (development mode with auto-reload)
 npm run dev
 
-# Or build and run (production)
-npm run build
+# Or start compiled version (production)
 node dist/server.js
 ```
 
-### Mobile Setup
+The backend will start on `http://localhost:4000`. If PostgreSQL is not configured, it will automatically use an in-memory data store.
+
+### Step 3: Mobile App Setup
 
 ```bash
-cd mobile
+# Navigate to mobile directory
+cd ../mobile
+
+# Install dependencies
 npm install
 
-# For Expo (recommended - easiest)
-npx expo start
+# Start Metro bundler
+npx react-native start
 
-# For React Native CLI (requires Android SDK)
+# In a separate terminal, build and run on Android
 npx react-native run-android
+```
 
-# For production build
-cd android && ./gradlew assembleRelease
+### Step 4: Connect Emulator to Backend
+
+If using Android Emulator, the backend runs on your host machine. Configure port forwarding:
+
+```bash
+# Forward backend port to emulator
+adb reverse tcp:4000 tcp:4000
 ```
 
 ---
@@ -373,68 +407,123 @@ cd android && ./gradlew assembleRelease
 
 ### REST Endpoints
 
-| Method | Endpoint | Description | Request Body |
+#### Health Check
+```http
+GET /health
+```
+Returns server status and uptime.
+
+#### Devices
+
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `GET` | `/devices` | List all registered devices | - |
+| `POST` | `/devices` | Register a new device | `{ name, firmwareVersion }` |
+| `GET` | `/devices/:id` | Get device details | - |
+| `DELETE` | `/devices/:id` | Remove a device | - |
+
+#### Readings
+
+| Method | Endpoint | Description | Query Params |
 |--------|----------|-------------|--------------|
-| GET | `/health` | Health check | - |
-| GET | `/devices` | List all devices | - |
-| POST | `/devices` | Register new device | `{ name, firmwareVersion }` |
-| GET | `/devices/:id` | Get device details | - |
-| GET | `/devices/:id/readings` | Get sensor readings | Query: `limit`, `offset` |
-| GET | `/devices/:id/readings/latest` | Get latest reading | - |
-| POST | `/devices/:id/commands` | Send command | `{ commandType, payload }` |
-| GET | `/devices/:id/commands` | Get command history | Query: `limit`, `offset` |
+| `GET` | `/devices/:id/readings` | Get historical readings | `limit`, `offset` |
+| `GET` | `/devices/:id/readings/latest` | Get most recent reading | - |
+| `POST` | `/devices/:id/readings` | Submit new reading | `{ temperature, humidity }` |
+
+#### Commands
+
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `GET` | `/devices/:id/commands` | Get command history | Query: `limit`, `offset` |
+| `POST` | `/devices/:id/commands` | Send command to device | `{ commandType, payload }` |
 
 ### WebSocket Events
+
+Connect to `ws://localhost:4000` for real-time updates.
 
 | Event | Direction | Payload | Description |
 |-------|-----------|---------|-------------|
 | `subscribe` | Client → Server | `{ deviceId }` | Subscribe to device updates |
 | `unsubscribe` | Client → Server | `{ deviceId }` | Unsubscribe from device |
 | `reading` | Server → Client | `{ deviceId, temperature, humidity, timestamp }` | New sensor reading |
-| `command` | Client → Server | `{ deviceId, type, payload }` | Send command to device |
 | `status` | Server → Client | `{ deviceId, connected, mode }` | Device status change |
+| `command` | Client → Server | `{ deviceId, type, payload }` | Send command |
 
 ### BLE Commands
 
 | Command | Payload | Description |
 |---------|---------|-------------|
-| `LED_ON` | - | Turn LED on |
-| `LED_OFF` | - | Turn LED off |
+| `LED_ON` | - | Turn status LED on |
+| `LED_OFF` | - | Turn status LED off |
 | `MODE_AUTO` | - | Switch to automatic mode |
 | `MODE_MANUAL` | - | Switch to manual mode |
-| `SET_THRESHOLD` | `{ threshold: number }` | Set temperature threshold |
+| `SET_THRESHOLD` | `{ threshold: number }` | Set temperature alert threshold |
+| `START_STREAM` | - | Begin continuous data streaming |
+| `STOP_STREAM` | - | Stop data streaming |
 
 ---
 
 ## 🧪 Testing
 
-### Run on Emulator (Mock Mode)
-The app automatically detects when running on an emulator and uses mock data:
-- 3 simulated BLE devices
-- Random temperature/humidity readings
-- Simulated command responses
+### Emulator Mode (No Hardware Required)
 
-### Run on Physical Device
-1. Enable USB debugging on your Android phone
-2. Connect via USB
-3. Run `npx react-native run-android`
-4. The app will use real BLE to scan for SmartLab devices
+The app automatically detects when running in an Android emulator and activates **mock mode**:
+
+- **3 simulated BLE devices** appear in the scan list
+- **Random sensor readings** are generated (20-40°C, 30-70% RH)
+- **All commands** work with simulated responses
+- **WebSocket connection** uses mock data stream
+
+This allows full testing of the UI and user flows without physical SmartLab hardware.
+
+### Physical Device Testing
+
+1. Enable **USB Debugging** on your Android device
+2. Connect via USB cable
+3. Run `adb devices` to verify connection
+4. Run `npx react-native run-android`
+5. The app will use real BLE to scan for SmartLab devices
+
+### Backend Testing
+
+```bash
+# Test health endpoint
+curl http://localhost:4000/health
+
+# Create a test device
+curl -X POST http://localhost:4000/devices \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Test Device", "firmwareVersion": "1.0.0"}'
+
+# Get all devices
+curl http://localhost:4000/devices
+```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions are welcome! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+### Code Style
+
+- Use **TypeScript** for all new code
+- Follow existing **ESLint** configuration
+- Maintain **Apple HIG** design consistency
+- Add **JSDoc comments** for public functions
+- Include **type definitions** for all exports
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -443,9 +532,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Kiran Kata**
 
 - GitHub: [@Kiran-kata](https://github.com/Kiran-kata)
+- Repository: [smartlab-hmi](https://github.com/Kiran-kata/smartlab-hmi)
 
 ---
 
 <p align="center">
-  Made with ❤️ for smart lab automation
+  <strong>SmartLab HMI Controller</strong><br/>
+  Modern laboratory equipment monitoring and control
 </p>
